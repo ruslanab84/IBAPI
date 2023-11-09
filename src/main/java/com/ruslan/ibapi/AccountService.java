@@ -27,8 +27,15 @@ public class AccountService {
         if(account==null){
             return 0;
         }
+        Operations operations = new Operations();
+        operations.setAccountId(id);
+        operations.setAmount(amount);
+        operations.setOperDate(LocalDateTime.now());
+        operations.setOperationType(0);
         account.setBalance(account.getBalance().add(amount));
+
         userRepository.save(account);
+        operationsRepository.save(operations);
         return 1;
     }
 
@@ -48,8 +55,15 @@ public class AccountService {
             if (currentBalance.compareTo(amount) < 0) {
                 return 0;
             }
+            Operations operations = new Operations();
+            operations.setAccountId(id);
+            operations.setAmount(amount);
+            operations.setOperDate(LocalDateTime.now());
+            operations.setOperationType(1);
+
             currentAccount.setBalance(currentAccount.getBalance().subtract(amount));
             userRepository.save(currentAccount);
+            operationsRepository.save(operations);
             return 1;
         }else {
             throw new RuntimeException("Account not found");
