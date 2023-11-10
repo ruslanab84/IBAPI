@@ -44,4 +44,9 @@ public class AccountController {
         return userService.getOperationList(id,startDate,endDate);
     }
 
+    @PostMapping("/transfermoney/{remid}/{recid}/{amount}")
+    public int transferMoney(@PathVariable Long remid, @PathVariable Long recid, @PathVariable BigDecimal amount){
+        return  userService.transferMoney(remid, recid, amount);
+    }
+
 }

@@ -77,4 +77,22 @@ public class AccountService {
             return operationsRepository.findAllByAccountIdAndOperDateBetween(id,startDate,endDate);
         }
     }
+
+    public int transferMoney(Long recipient, Long remitter, BigDecimal amount){
+        Account accountRecipient = userRepository.findById(recipient).orElse(null);
+        Account accountRemitter = userRepository.findById(remitter).orElse(null);
+        if(accountRecipient != null && accountRemitter != null){
+           if(accountRemitter.getBalance().compareTo(amount) > 0 && amount.signum() > 0){
+               accountRemitter.setBalance(accountRemitter.getBalance().subtract(amount));
+               accountRecipient.setBalance(accountRecipient.getBalance().add(amount));
+               userRepository.save(accountRemitter);
+               userRepository.save(accountRecipient);
+               return 0;
+           }
+        }else {
+            throw new RuntimeException("Account not found");
+        }
+        return 1;
+
+    }
 }
